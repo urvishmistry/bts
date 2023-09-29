@@ -1,0 +1,6 @@
+---
+- name: BTS
+  hosts: localhost
+  become: true
+  roles:
+  - bts

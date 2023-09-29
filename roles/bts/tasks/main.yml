@@ -1,0 +1,89 @@
+---
+- name: Installing PTS Dependencies
+  become: True
+  apt:
+    name:
+    - git
+    - php-cli
+    - php-xml
+    - php-zip
+    - php-json
+    - php-mbstring
+    - php-gd
+    - unzip
+    - make
+    - gcc
+    - perl
+    - build-essential
+    - autoconf
+    - libopenmpi-dev
+    - openmpi-bin
+    - libmpich-dev
+    - libblas-dev
+    - libopenblas-openmp-dev
+    - libatlas-base-dev
+    - liblapack-dev
+    - liblapacke-dev
+    - mesa-utils
+    - vulkan-tools
+    - unzip
+    - apt-file
+    state: present
+
+# - name: Install packages
+#   apt:
+#    name:
+#       - python-pexpect
+#       - python-pip
+
+# - name: Install Python modules
+#   command: pip install pexpect
+
+- name: Downloading Phoronix Test Suite
+  shell: wget https://phoronix-test-suite.com/releases/repo/pts.debian/files/phoronix-test-suite_10.8.4_all.deb --no-check-certificate
+
+- name: Installing Phoronix Test Suite
+  shell: dpkg -i phoronix-test-suite_10.8.4_all.deb
+
+- name: Verifying the Test Suite Installation
+  shell: phoronix-test-suite version
+
+- name: Installing HPL Linpack Benchmark
+  become: True
+  command: phoronix-test-suite install hpl
+  args:
+    executable: /bin/bash
+
+- name: Run Phoronix Test Suite HPL Benchmark
+  expect:
+    command: phoronix-test-suite run hpl
+    responses:
+      Question:
+        - 'First Question in the Prompt' : 'Y'
+        - 'Second Question in the Prompt' : 'hpl_{{ inventory_hostname }}_{{ ansible_date_time }}'
+        - 'Third Question in the Prompt' : 'hpl_{{ inventory_hostname }}_{{ ansible_date_time }}'
+        - 'Fourth Question in the Prompt' : 'Y'
+        - 'Fifth Question in the Prompt' : 'Y'
+
+
+
+# - name: Run Phoronix Test Suite HPL Benchmark
+#   command: sudo phoronix-test-suite run hpl <<EOF
+#     Y
+#     $(date +%d%m%Y)_hpl
+#     $(date +%d%m%Y)_hpl
+#     EOF
+#   environment:
+#     TERM: xterm
+#   register: benchmark_output
+#   ignore_errors: yes
+
+- name: Show Benchmark Output
+  debug:
+    var: benchmark_output.stdout_lines
+  when: benchmark_output.rc == 0
+
+- name: Show Benchmark Error Output
+  debug:
+    var: benchmark_output.stderr_lines
+  when: benchmark_output.rc != 0

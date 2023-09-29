@@ -1,0 +1,3 @@
+---
+# vars file for bts
+ansible_sudo_passwd: admin

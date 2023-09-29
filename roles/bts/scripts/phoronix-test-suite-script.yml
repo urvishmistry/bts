@@ -1,0 +1,7 @@
+---
+- expect:
+    shell: sudo phoronix-test-suite run hpl
+    responses:
+      - "Y"
+      - "hpl_{{ inventory_hostname }}_{{ ansible_date_time }}"
+      - "hpl_{{ inventory_hostname }}_{{ ansible_date_time }}"
