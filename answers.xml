@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<PhoronixTestSuite>
+    <TestProfile>
+        <HPLinpack>
+            <PromptAnswers>
+                <Prompt name="Would you like to save these test results (Y/n)" value="Y" />
+                <Prompt name="Enter a name for the result file" value="Test" />
+                <Prompt name="Enter a unique name to describe this test run / configuration" value="Testy" />
+                <Prompt name="New Description" value="/n" />
+                <!-- Add more prompts and answers as needed -->
+            </PromptAnswers>
+        </HPLinpack>
+    </TestProfile>
+</PhoronixTestSuite>
